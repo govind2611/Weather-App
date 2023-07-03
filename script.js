@@ -1,27 +1,66 @@
 const api = {
   key: "4054535fcc56ee7b217bf7f35be322f1",
-  base: "https://api.openweathermap.org/data/2.5/"
+  base: "https://api.openweathermap.org/data/2.5/",
 };
 
 const searchbox = document.querySelector(".search-box");
 searchbox.addEventListener("keypress", setQuery);
 
+let previousQuery = "";
+
 function setQuery(evt) {
-  if (evt.keyCode == 13) { // keycode 13 is enter key on keyboard
+  if (evt.keyCode == 13) {
+    if (searchbox.value !== previousQuery) {
+      // Clear previous results
+      clearResults();
+    }
     getResults(searchbox.value);
   }
 }
 
+function clearResults() {
+  let city = document.querySelector(".location .city");
+  city.innerText = "";
+
+  let date = document.querySelector(".location .date");
+  date.innerText = "";
+
+  let temp = document.querySelector(".current .temp");
+  temp.innerHTML = "";
+
+  let weather_el = document.querySelector(".current .weather");
+  weather_el.innerText = "";
+
+  let hilow = document.querySelector(".hi-low");
+  hilow.innerText = "";
+
+  clearError();
+
+  // Hide weather data
+  let weatherData = document.querySelector(".current");
+  weatherData.style.display = "none";
+}
+
 function getResults(query) {
   fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-    .then((weather) => {
-      return weather.json();
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.status);
+      }
+      return response.json();
     })
-    .then(displayResults);
+    .then(displayResults)
+    .catch((error) => {
+      console.log("Error:", error);
+      displayError(
+        "Oops! The city you entered seems to be hiding. Let's search again!"
+      );
+    });
 }
 
 function displayResults(weather) {
-  console.log(weather);
+  clearResults();
+
   let city = document.querySelector(".location .city");
   city.innerText = `${weather.name}, ${weather.sys.country}`;
 
@@ -37,6 +76,49 @@ function displayResults(weather) {
 
   let hilow = document.querySelector(".hi-low");
   hilow.innerText = `${weather.main.temp_min}°C / ${weather.main.temp_max}°C`;
+
+  clearError();
+
+  // Show weather data
+  let weatherData = document.querySelector(".current");
+  weatherData.style.display = "block";
+
+  Toastify({
+    text: "Weather data fetched successfully!",
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    backgroundColor: "#4caf50",
+    stopOnFocus: true,
+  }).showToast();
+
+  // Update previous query
+  previousQuery = searchbox.value;
+}
+
+function displayError(message) {
+  let errorElement = document.querySelector(".error-message");
+  errorElement.innerHTML = `<span>${message}</span> <span>🌎🔎</span>`;
+  errorElement.style.display = "block";
+
+  Toastify({
+    text: "Wrong City Entered",
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    backgroundColor: "#f44336",
+    stopOnFocus: true,
+  }).showToast();
+
+  // Hide weather data
+  let weatherData = document.querySelector(".current");
+  weatherData.style.display = "none";
+}
+
+function clearError() {
+  let errorElement = document.querySelector(".error-message");
+  errorElement.innerText = "";
+  errorElement.style.display = "none";
 }
 
 function dateBuilder(d) {
@@ -52,7 +134,7 @@ function dateBuilder(d) {
     "September",
     "October",
     "November",
-    "December"
+    "December",
   ];
   let days = [
     "Sunday",
@@ -61,7 +143,7 @@ function dateBuilder(d) {
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday"
+    "Saturday",
   ];
 
   let day = days[d.getDay()];

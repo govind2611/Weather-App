@@ -2,34 +2,35 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>weather App</title>
-	<link rel="stylesheet" href="style.css" />
-	<link rel="shortcut icon" href="./logo.png" type="image/x-icon">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="./logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" />
 </head>
 
 <body>
-	<div class="app-wrap">
-		<header>
-			<input type="text" autocomplete="off" class="search-box" placeholder="Search for a city">
-		</header>
-
-		<main>
-			<section class="location">
-				<div class="city"></div>
-				<div class="date"></div>
-			</section>
-
-			<div class="current">
-				<div class="temp"></div>
-				<div class="weather"></div>
-				<div class="hi-low"></div>
-			</div>
-		</main>
-	</div>
-	<script src="script.js"></script>
+  <div class="app-wrap">
+    <header>
+      <input type="text" autocomplete="off" class="search-box" placeholder="Search for a city">
+    </header>
+    <main>
+      <section class="location">
+        <div class="city"></div>
+        <div class="date"></div>
+      </section>
+      <div class="current">
+        <div class="temp"></div>
+        <div class="weather"></div>
+        <div class="hi-low"></div>
+      </div>
+      <div class="error-message"></div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="script.js"></script>
 </body>
 
 </html>
